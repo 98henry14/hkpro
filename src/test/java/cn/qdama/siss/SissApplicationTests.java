@@ -13,8 +13,10 @@ import java.sql.SQLException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SissApplicationTests {
+
     @Autowired
     DataSource dataSource;
+
 
     @Test
     public void contextLoads() throws SQLException {
