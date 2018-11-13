@@ -21,7 +21,7 @@ public class DruidConfig {
     @Bean
     public DataSource druid(){
         DruidDataSource source = new DruidDataSource();
-        source.setValidationQuery("select getdate()");
+        source.setValidationQuery("SELECT 1;");
 //        source.setValidationQuery();
         return source;
 

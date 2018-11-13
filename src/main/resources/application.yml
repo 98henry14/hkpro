@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: sa
-    password: jet09
-    url: jdbc:sqlserver://localhost:1433;databaseName=Test
+    password: qdm@123
+    url: jdbc:sqlserver://120.79.56.4:7081;databaseName=WTQDM
     type: com.alibaba.druid.pool.DruidDataSource
 #   数据源其他配置
     initialSize: 5
@@ -22,7 +22,8 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-  jta:
-    atomikos:
-      datasource:
-        test-query: select 1;
+
+
+
+
+
