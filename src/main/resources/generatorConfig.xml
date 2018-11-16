@@ -11,9 +11,9 @@
         </commentGenerator>
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-                        connectionURL="jdbc:sqlserver://localhost:1433;databaseName=Test"
+                        connectionURL="jdbc:sqlserver://120.79.56.4:7081;databaseName=WTQDM"
                         userId="sa"
-                        password="jet09">
+                        password="qdm@123">
         </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
@@ -33,14 +33,31 @@
                 type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
                 type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
         -->
-        <javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="cn.qdama.siss.dao" targetProject="src/main/java">
+        <javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="cn.qdama.siss.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!--生成对应表及类名-->
-        <table tableName="t_im_sheet_detail" domainObjectName="Detail4im" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <table tableName="t_im_sheet_master" domainObjectName="Master4im" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="t_sys_sheetno_flow"
+               domainObjectName="SysSheetNo"
+               enableCountByExample="false"
+               enableUpdateByExample="true"
+               enableDeleteByExample="false"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true"></table>
+        <!--<table tableName="t_im_sheet_detail"
+               domainObjectName="Detail4im"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="t_im_sheet_master"
+               domainObjectName="Master4im"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"></table>-->
 
     </context>
 </generatorConfiguration>

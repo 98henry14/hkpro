@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Filter;
 
 @Configuration
 public class DruidConfig {
@@ -21,7 +22,10 @@ public class DruidConfig {
     @Bean
     public DataSource druid(){
         DruidDataSource source = new DruidDataSource();
-        source.setValidationQuery("SELECT 1;");
+       /* source.setValidationQuery("SELECT 1;");
+        source.setValidationQueryTimeout(500);
+        String query = source.getValidationQuery();
+        System.out.println(query);*/
 //        source.setValidationQuery();
         return source;
 
