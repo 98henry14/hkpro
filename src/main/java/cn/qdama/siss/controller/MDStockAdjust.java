@@ -10,9 +10,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.xml.soap.Detail;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -46,7 +49,12 @@ public class MDStockAdjust {
         Branch_stockExample ex = new Branch_stockExample();
         ex.createCriteria().andBranchNoEqualTo("100101").andStockQtyLessThan(new BigDecimal(0));//待判断是否被淘汰，淘汰不做处理！！！
         List<Branch_stock> list = stockMapper.selectByExample(ex);
+        List<Detail4im> detail4imList = new ArrayList<>();
         if (list!=null && list.size()>0){
+            for (Branch_stock branch_stock : list) {
+                Detail4im im = new Detail4im();
+
+            }
             /*//如果不为空则利用总部人员制作的直调入库单插入
             for (Branch_stock branchStock : list) {
                 detail4im.setFlowId(null);

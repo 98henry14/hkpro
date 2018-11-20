@@ -37,13 +37,13 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!--生成对应表及类名-->
-        <table tableName="t_im_branch_stock"
+        <!--<table tableName="t_im_branch_stock"
                domainObjectName="Branch_stock"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="true"
-               selectByExampleQueryId="true"></table>
+               selectByExampleQueryId="true"></table>-->
         <!--<table tableName="t_im_sheet_detail"
                domainObjectName="Detail4im"
                enableCountByExample="false"
@@ -57,7 +57,14 @@
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>-->
+               selectByExampleQueryId="false"></table>
+        <table tableName="t_sys_sheetno_flow"
+               domainObjectName="SysSheetNo"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true"></table>-->
 
     </context>
 </generatorConfiguration>

@@ -48,10 +48,15 @@ public class SissApplicationTests {
         System.out.println(s);*/
 
 
-        /*List<Detail4im> list = detail4imMapper.selectListLikeSheetNo("DI0000181119%");
-        System.out.println(list.size()+"------"+list.get(0).getSheetNo());*/
+/*        List<Detail4im> list = detail4imMapper.selectListLikeSheetNo("DI0000181119%");
+        System.out.println(list.size()+"------"+list.get(0).getSheetNo());
+
+        BigDecimal result = detail4imMapper.getSub_amt("DI00001811190085");
+        System.out.println(result);*/
+
+
         Branch_stockExample ex = new Branch_stockExample();
-        ex.createCriteria().andBranchNoEqualTo("100101").andStockQtyGreaterThan(new BigDecimal(0));//andStockQtyLessThan(new BigDecimal(0));
+        ex.createCriteria().andBranchNoEqualTo("100101").andStockQtyLessThan(new BigDecimal(0));//andStockQtyGreaterThan(new BigDecimal(0));
         List<Branch_stock> list = stockMapper.selectByExample(ex);
         System.out.println(list.get(0).getItemNo()+"----"+list.get(0).getStockQty()+"_____"+list.size());
 

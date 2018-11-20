@@ -88,8 +88,8 @@ public class Hello {
                 "                        end  " +
                 "                    else  (CASE WHEN i.purchase_spec = 1 or i.purchase_spec <= 0 THEN s.stock_qty ELSE CONVERT(NUMERIC(16,4),s.stock_qty / i.purchase_spec) END)  " +
                 "                    end,  " +
-                "                    [orgi_price]=null,  " +
-                "                    [valid_price] = (case when '0' = '8' and '0' = '1' and info.trade_type <> '8'    " +
+                "     [orgi_price]=null,  " +
+                "     [valid_price] = (case when '0' = '8' and '0' = '1' and info.trade_type <> '8'    " +
                 "         then CONVERT(NUMERIC(16,4),0) else s.avg_cost end),  " +
                 "     [sale_price]=bp.sale_price,  " +
                 "     [tax]=0,   " +

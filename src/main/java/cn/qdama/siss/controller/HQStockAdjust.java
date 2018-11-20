@@ -9,6 +9,7 @@ import cn.qdama.siss.mapper.Master4imMapper;
 import cn.qdama.siss.mapper.SysSheetNoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -123,7 +124,26 @@ public class HQStockAdjust {
         }
 
 
+
         return list;
 
+    }
+    //单据审核
+    @RequestMapping("/confirm/{sheetNo}")
+    public Master4im confirmOrder(@PathVariable String sheetNo){
+        /**
+         * 执行以下存储过程看下单据的情况
+         * pr_get_sheet_status
+         */
+        Master4im master4im = master4imMapper.selectByPrimaryKey(sheetNo);
+        master4im.setApproveFlag("1");
+        master4im.setConfirmMan("9999");
+        master4im.setWorkDate(new Date());
+        //master4im.setTimeStamp();
+        int i = master4imMapper.updateByPrimaryKey(master4im);
+//        int i = master4imMapper.updateByPrimaryKeySelective(master4im);/**/
+//        int i = master4imMapper.updateByPrimaryKeyWithBLOBs(master4im);/*System*/
+        System.out.println(i);
+        return master4im;
     }
 }
