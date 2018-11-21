@@ -39,13 +39,13 @@ public class SissApplicationTests {
         System.out.println(connection);
         connection.close();*/
         //1.先获取目前的值再更新 OO库存调整单
-        /*SysSheetNoKey key = new SysSheetNoKey();
+        SysSheetNoKey key = new SysSheetNoKey();
         key.setBranchNo("0000");
         key.setSheetId("OO");
         SysSheetNo sysSheetNo = sysSheetNoMapper.selectByPrimaryKey(key);
        // Long num=173l;
         String s = String.format("%04d", sysSheetNo.getSheetValue());
-        System.out.println(s);*/
+        System.out.println(s);
 
 
 /*        List<Detail4im> list = detail4imMapper.selectListLikeSheetNo("DI0000181119%");
@@ -55,10 +55,17 @@ public class SissApplicationTests {
         System.out.println(result);*/
 
 
-        Branch_stockExample ex = new Branch_stockExample();
+        /*Branch_stockExample ex = new Branch_stockExample();
         ex.createCriteria().andBranchNoEqualTo("100101").andStockQtyLessThan(new BigDecimal(0));//andStockQtyGreaterThan(new BigDecimal(0));
         List<Branch_stock> list = stockMapper.selectByExample(ex);
         System.out.println(list.get(0).getItemNo()+"----"+list.get(0).getStockQty()+"_____"+list.size());
+        List<Detail4im> ims = stockMapper.selectMinusStock();
+        int i=0;
+        for (Detail4im im : ims) {
+            System.out.println(im.getItemNo()+"+++++"+im.getLargeQty()+"++++"+im.getSubAmt()+"+++++"+im.getRealQty()+"=======");
+
+        }
+        System.out.println(ims.size());*/
 
     }
 

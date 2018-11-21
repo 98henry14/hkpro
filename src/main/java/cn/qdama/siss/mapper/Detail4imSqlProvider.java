@@ -21,11 +21,11 @@ public class Detail4imSqlProvider {
         }
         
         if (record.getSheetNo() != null) {
-            VALUES("sheet_no", "#{sheetNo,jdbcType=CHAR}");
+            VALUES("sheet_no", "#{sheetNo,jdbcType=VARCHAR}");
         }
-        
+
         if (record.getItemNo() != null) {
-            VALUES("item_no", "#{itemNo,jdbcType=CHAR}");
+            VALUES("item_no", "#{itemNo,jdbcType=VARCHAR}");
         }
         
         if (record.getOrderQty() != null) {
@@ -112,11 +112,11 @@ public class Detail4imSqlProvider {
         UPDATE("t_im_sheet_detail");
         
         if (record.getSheetNo() != null) {
-            SET("sheet_no = #{sheetNo,jdbcType=CHAR}");
+            SET("sheet_no = #{sheetNo,jdbcType=VARCHAR}");
         }
-        
+
         if (record.getItemNo() != null) {
-            SET("item_no = #{itemNo,jdbcType=CHAR}");
+            SET("item_no = #{itemNo,jdbcType=VARCHAR}");
         }
         
         if (record.getOrderQty() != null) {

@@ -3,9 +3,11 @@ package cn.qdama.siss.mapper;
 import cn.qdama.siss.bean.Branch_stock;
 import cn.qdama.siss.bean.Branch_stockExample;
 import cn.qdama.siss.bean.Branch_stockKey;
-import org.apache.ibatis.annotations.*;
-
 import java.util.List;
+
+import cn.qdama.siss.bean.Detail4im;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 @Mapper
 public interface Branch_stockMapper {
     @Delete({
@@ -48,6 +50,7 @@ public interface Branch_stockMapper {
           "and branch_no = #{branchNo,jdbcType=VARCHAR}"
     })
     Branch_stock selectByPrimaryKey(Branch_stockKey key);
+
     @UpdateProvider(type=Branch_stockSqlProvider.class, method="updateByPrimaryKeySelective")
     int updateByPrimaryKeySelective(Branch_stock record);
 
@@ -68,4 +71,31 @@ public interface Branch_stockMapper {
           "and branch_no = #{branchNo,jdbcType=VARCHAR}"
     })
     int updateByPrimaryKey(Branch_stock record);
+    //查询门店负库存
+    @Select({"select a.item_no," ,
+            "a.avg_cost as valid_price," ,
+            "ABS(a.stock_qty/b.purchase_spec) as large_qty," ,
+            "ABS(a.stock_qty) as real_qty," ,
+            "ABS(a.cost_amt) as sub_amt," ,
+            "c.sale_price ," ,
+            "row_number() OVER (ORDER by a.item_no) as row_id",
+            "from t_im_branch_stock a " ,
+            "LEFT JOIN t_bd_item_info b on a.item_no = b.item_no " ,
+            "LEFT JOIN t_pc_branch_price c on LEFT(a.branch_no,4)=c.branch_no and a.item_no=c.item_no " ,
+            "where a.branch_no='100101' and a.stock_qty <0 and b.sale_flag<>2"})
+    List<Detail4im> selectMinusStock();
+    //查询门店正库存
+    @Select({"select a.item_no," ,
+            "a.avg_cost as valid_price," ,
+            "ABS(a.stock_qty/b.purchase_spec) as large_qty," ,
+            "ABS(a.stock_qty) as real_qty," ,
+            "ABS(a.cost_amt) as sub_amt," ,
+            "c.sale_price ," ,
+            "row_number() OVER (ORDER by a.item_no) as row_id",
+            "from t_im_branch_stock a " ,
+            "LEFT JOIN t_bd_item_info b on a.item_no = b.item_no " ,
+            "LEFT JOIN t_pc_branch_price c on LEFT(a.branch_no,4)=c.branch_no and a.item_no=c.item_no " ,
+            "where a.branch_no='100101' and a.stock_qty >0 and b.sale_flag<>2"})
+    List<Detail4im> selectPositiveStock();
+    //查询猪肉类负库存汇总，
 }

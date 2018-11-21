@@ -17,6 +17,7 @@ import cn.qdama.siss.bean.SysSheetNoExample.Criteria;
 import cn.qdama.siss.bean.SysSheetNoExample.Criterion;
 import cn.qdama.siss.bean.SysSheetNoExample;
 import java.util.List;
+import java.util.Map;
 
 public class SysSheetNoSqlProvider {
 
@@ -70,6 +71,57 @@ public class SysSheetNoSqlProvider {
             ORDER_BY(example.getOrderByClause());
         }
         
+        return SQL();
+    }
+
+    public String updateByExampleSelective(Map<String, Object> parameter) {
+        SysSheetNo record = (SysSheetNo) parameter.get("record");
+        SysSheetNoExample example = (SysSheetNoExample) parameter.get("example");
+
+        BEGIN();
+        UPDATE("t_sys_sheetno_flow");
+
+        if (record.getSheetId() != null) {
+            SET("sheet_id = #{record.sheetId,jdbcType=CHAR}");
+        }
+
+        if (record.getBranchNo() != null) {
+            SET("branch_no = #{record.branchNo,jdbcType=CHAR}");
+        }
+
+        if (record.getSheetValue() != null) {
+            SET("sheet_value = #{record.sheetValue,jdbcType=NUMERIC}");
+        }
+
+        if (record.getTempValue() != null) {
+            SET("temp_value = #{record.tempValue,jdbcType=NUMERIC}");
+        }
+
+        if (record.getLastTime() != null) {
+            SET("last_time = #{record.lastTime,jdbcType=TIMESTAMP}");
+        }
+
+        if (record.getOther1() != null) {
+            SET("other1 = #{record.other1,jdbcType=VARCHAR}");
+        }
+
+        applyWhere(example, true);
+        return SQL();
+    }
+
+    public String updateByExample(Map<String, Object> parameter) {
+        BEGIN();
+        UPDATE("t_sys_sheetno_flow");
+
+        SET("sheet_id = #{record.sheetId,jdbcType=CHAR}");
+        SET("branch_no = #{record.branchNo,jdbcType=CHAR}");
+        SET("sheet_value = #{record.sheetValue,jdbcType=NUMERIC}");
+        SET("temp_value = #{record.tempValue,jdbcType=NUMERIC}");
+        SET("last_time = #{record.lastTime,jdbcType=TIMESTAMP}");
+        SET("other1 = #{record.other1,jdbcType=VARCHAR}");
+
+        SysSheetNoExample example = (SysSheetNoExample) parameter.get("example");
+        applyWhere(example, true);
         return SQL();
     }
 

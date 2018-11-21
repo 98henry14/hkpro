@@ -2,10 +2,10 @@ package cn.qdama.siss.mapper;
 
 import cn.qdama.siss.bean.Detail4im;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 @Mapper
 public interface Detail4imMapper {
     @Delete({
@@ -60,21 +60,8 @@ public interface Detail4imMapper {
             "#{memo,jdbcType=VARCHAR}, #{produceDate,jdbcType=TIMESTAMP}, ",
             "#{rowId,jdbcType=NUMERIC}, #{itemBarcode,jdbcType=VARCHAR})"
     })
+    @SelectKey(before = false,keyProperty = "flowId",resultType = Long.class,statement = {"select @@IDENTITY"})
     int insertAuto(Detail4im record);
-
-    @Select({
-            "select * ",
-            "from t_im_sheet_detail",
-            "where sheet_no like #{sheetno,jdbcType=VARCHAR}"
-    })
-    List<Detail4im> selectListLikeSheetNo(String sheetno);
-
-    @Select({
-            "select sum(sub_amt) ",
-            "from t_im_sheet_detail",
-            "where sheet_no = #{sheetno,jdbcType=VARCHAR}"
-    })
-    BigDecimal getSub_amt(String sheetno);
 
     @InsertProvider(type=Detail4imSqlProvider.class, method="insertSelective")
     int insertSelective(Detail4im record);
@@ -88,6 +75,29 @@ public interface Detail4imMapper {
         "where flow_id = #{flowId,jdbcType=NUMERIC}"
     })
     Detail4im selectByPrimaryKey(Long flowId);
+
+    @Select({
+            "select ",
+            "flow_id, sheet_no, item_no, order_qty, real_qty, large_qty, orgi_price, valid_price, ",
+            "sub_amt, sale_price, tax, valid_date, other1, other2, other3, num1, num2, num3, ",
+            "memo, produce_date, row_id, item_barcode",
+            "from t_im_sheet_detail",
+            "where sheet_no = #{sheetNo,jdbcType=CHAR}"
+    })
+    List<Detail4im> selectListBySheetNo(String sheetNo);
+
+
+
+    //c
+    @Select({
+            "select ",
+            "flow_id, sheet_no, item_no, order_qty, real_qty, large_qty, orgi_price, valid_price, ",
+            "sub_amt, sale_price, tax, valid_date, other1, other2, other3, num1, num2, num3, ",
+            "memo, produce_date, row_id, item_barcode ",
+            "from t_im_sheet_detail ",
+            "where sheet_no like #{sheetNo}"
+    })
+    List<Detail4im> selectListLikeSheetNo(String sheetNo);
 
     @UpdateProvider(type=Detail4imSqlProvider.class, method="updateByPrimaryKeySelective")
     int updateByPrimaryKeySelective(Detail4im record);
@@ -118,4 +128,8 @@ public interface Detail4imMapper {
         "where flow_id = #{flowId,jdbcType=NUMERIC}"
     })
     int updateByPrimaryKey(Detail4im record);
+
+    @Select({"select sum(sub_amt) from t_im_sheet_detail " +
+            "where sheet_no = #{sheetNo,jdbcType=CHAR}"})
+    BigDecimal getSub_amt(String sheetNo);
 }
