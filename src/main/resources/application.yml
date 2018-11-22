@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    username: sa
-    password: qdm@123
-    url: jdbc:sqlserver://120.79.56.4:7081;databaseName=WTQDM
+    username: 
+    password: 
+    url: jdbc:sqlserver://
     type: com.alibaba.druid.pool.DruidDataSource
 #   数据源其他配置
     initialSize: 5
