@@ -11,9 +11,9 @@
         </commentGenerator>
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-                        connectionURL="jdbc:sqlserver://120.79.56.4:7081;databaseName=WTQDM"
-                        userId="sa"
-                        password="qdm@123">
+                        connectionURL=""
+                        userId=""
+                        password="">
         </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
