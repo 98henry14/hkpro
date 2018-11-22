@@ -3,6 +3,7 @@ package cn.qdama.siss;
 import cn.qdama.siss.mapper.Branch_stockMapper;
 import cn.qdama.siss.mapper.Detail4imMapper;
 import cn.qdama.siss.mapper.SysSheetNoMapper;
+import cn.qdama.siss.services.InsertMasterService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,15 @@ public class SissApplicationTests {
     private Branch_stockMapper stockMapper;
     @Autowired
     JavaMailSenderImpl javaMailSender;
+    @Autowired
+    InsertMasterService masterService;
 
     @Test
     public void contextLoads() throws Exception {
-        String format = new SimpleDateFormat("yyyy年MM月dd日").format(new Date());
+        /*long oo = masterService.getSysSheetValue("OO", "0000");
+        System.out.println(oo);*/
+
+        /*String format = new SimpleDateFormat("yyyy年MM月dd日").format(new Date());
 //        String filepath ="E:\\FTPData\\hkadmin\\hk\\门店日清单据-"+format+".xls";
         String filepath ="E:\\FTPData\\hkadmin\\hk\\日清表.xls";
         String filename =format+"日清数据.xls";
@@ -59,7 +65,7 @@ public class SissApplicationTests {
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             e.printStackTrace();
-        }
+        }*/
         /*System.out.println(dataSource.getClass());
 
         Connection connection = dataSource.getConnection();

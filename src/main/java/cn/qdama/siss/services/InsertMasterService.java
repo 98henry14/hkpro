@@ -61,6 +61,6 @@ public class InsertMasterService {
         sysSheetNo.setSheetValue(sysSheetNo.getSheetValue() + 1);
         sysSheetNo.setLastTime(new Date());
         sysSheetNoMapper.updateByPrimaryKey(sysSheetNo);
-        return sysSheetNo.getSheetValue() + 1;
+        return sysSheetNo.getSheetValue();
     }
 }

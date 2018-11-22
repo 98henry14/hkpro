@@ -55,21 +55,21 @@ public class DCService {
     @Scheduled(cron = "0 00 23 * * ?")
     public int getDC() throws IOException{
         //1.先获取目前的值再更新
-        SysSheetNoKey key = new SysSheetNoKey();
+        /*SysSheetNoKey key = new SysSheetNoKey();
         key.setBranchNo("0000");
         key.setSheetId("DC");
         SysSheetNo sysSheetNo = sysSheetNoMapper.selectByPrimaryKey(key);
-
         sysSheetNo.setSheetValue(sysSheetNo.getSheetValue() + 1);
         sysSheetNo.setLastTime(new Date());
-        sysSheetNoMapper.updateByPrimaryKey(sysSheetNo);
+        sysSheetNoMapper.updateByPrimaryKey(sysSheetNo);*/
+        long value = insertMasterService.getSysSheetValue("DC", "0000");
         //2、获得门店日清数据
+                //2.1 生成excel文件
                 String[] tableHeaders = {"序号", "货号", "单据号", "日清箱数", "日清数量", "单价", "日清金额", "售价", "备注"};
                 HSSFWorkbook wbook = new HSSFWorkbook();
                 HSSFCellStyle cellStyle = wbook.createCellStyle();
                 cellStyle.setAlignment(HorizontalAlignment.CENTER);
                 cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-
                 HSSFSheet sheet = wbook.createSheet("-门店日清单据-");
                 HSSFRow row = sheet.createRow(0);
                 for (int i=0;i<tableHeaders.length;i++) {
@@ -77,7 +77,7 @@ public class DCService {
                     cell.setCellValue(tableHeaders[i]);
                     cell.setCellStyle(cellStyle);
                 }
-
+        //2.2 获取单据
         List<Detail4im> list1 = stockMapper.getMDDayClean("100101%");
         int i=1;
         for (Detail4im detail4im : list1) {
@@ -128,10 +128,12 @@ public class DCService {
             MimeMessageHelper helper = new MimeMessageHelper( mimeMessage,true,"utf-8");
 
             helper.setSubject("门店"+format+"日清数据");
-            helper.setText("附件为"+format+"日清数据,日清金额为:"+sub_amt+"。如有问题，请联系信息部!\n ");
-            String[] to={"805595996@qq.com","xiexiaojie@qdama.cn"};
-
+            helper.setText("附件为"+format+"日清数据,日清金额为:"+sub_amt+"。详情见附件，邮件为定时发送，如有问题，请及时联系!\n ");
+            String[] to={"zhoufei@qdama.cn","zhongguoming@qdama.cn"};//,
+            //String[] cc={"dengxiobiao@qdama.cn","zhuangzhouhu@qdama.cn","lvjiankang@qdama.cn","yuhanwen@qdama.cn","zhoujiantao@qdama.cn","lijian@qdama.cn","chenfeiyu@qdama.cn"};
+            String[] cc={"zhuangzhouhu@qdama.cn","yuhanwen@qdama.cn","zhoujiantao@qdama.cn","qiuziwen@qdama.cn","chenfeiyu@qdama.cn","xiexiaojie@qdama.cn"};
             helper.setTo(to);
+            helper.setCc(cc);
             helper.setFrom("xiexiaojie@qdama.cn");
             helper.addAttachment("门店日清单据.xls",new File(filepath1));
             javaMailSender.send(mimeMessage);
