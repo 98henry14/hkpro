@@ -1,22 +1,24 @@
 package cn.qdama.siss;
 
-import cn.qdama.siss.bean.*;
 import cn.qdama.siss.mapper.Branch_stockMapper;
 import cn.qdama.siss.mapper.Detail4imMapper;
 import cn.qdama.siss.mapper.SysSheetNoMapper;
-import org.codehaus.groovy.runtime.powerassert.SourceText;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import javax.sql.DataSource;
-import javax.xml.transform.Source;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,22 +32,47 @@ public class SissApplicationTests {
     private Detail4imMapper detail4imMapper;
     @Autowired
     private Branch_stockMapper stockMapper;
+    @Autowired
+    JavaMailSenderImpl javaMailSender;
 
     @Test
-    public void contextLoads() throws SQLException {
+    public void contextLoads() throws Exception {
+        String format = new SimpleDateFormat("yyyy年MM月dd日").format(new Date());
+//        String filepath ="E:\\FTPData\\hkadmin\\hk\\门店日清单据-"+format+".xls";
+        String filepath ="E:\\FTPData\\hkadmin\\hk\\日清表.xls";
+        String filename =format+"日清数据.xls";
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
+
+            helper.setSubject("门店"+format+"日清数据");
+            helper.setText("附件为"+format+"日清数据,日清金额为:"+0.00+"。如有问题，请联系信息部!\n ");
+            String[] to={"805595996@qq.com","xiexiaojie@qdama.cn"};
+
+            helper.setTo(to);
+            helper.setFrom("xiexiaojie@qdama.cn");
+
+            helper.addAttachment("日清表.xls",new File(filepath));
+//            helper.addAttachment(MimeUtility.encodeWord("日清表.xls"),new File(filepath));
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         /*System.out.println(dataSource.getClass());
 
         Connection connection = dataSource.getConnection();
         System.out.println(connection);
         connection.close();*/
-        //1.先获取目前的值再更新 OO库存调整单
+        /*//1.先获取目前的值再更新 OO库存调整单
         SysSheetNoKey key = new SysSheetNoKey();
         key.setBranchNo("0000");
         key.setSheetId("OO");
         SysSheetNo sysSheetNo = sysSheetNoMapper.selectByPrimaryKey(key);
        // Long num=173l;
         String s = String.format("%04d", sysSheetNo.getSheetValue());
-        System.out.println(s);
+        System.out.println(s);*/
 
 
 /*        List<Detail4im> list = detail4imMapper.selectListLikeSheetNo("DI0000181119%");
@@ -66,6 +93,36 @@ public class SissApplicationTests {
 
         }
         System.out.println(ims.size());*/
+
+
+        /*double count = stockMapper.selectMeatMinusStock();
+        System.out.println(count);
+        for (Detail4im detail4im : stockMapper.getMDDayClean()) {
+            System.out.println(detail4im.getSheetNo()+"--货号---"+detail4im.getItemNo()+"--数量--"+detail4im.getRealQty());
+        }
+        ;*/
+        /*BigDecimal b = new BigDecimal("6.02155445489742132132154").setScale(4, RoundingMode.HALF_UP);
+        System.out.println(b+"======="+new Date().toString());
+
+        String[] tableHeaders = {"序号", "货号", "单据号", "日清箱数", "日清数量", "单价", "日清金额", "售价", "备注"};
+        HSSFWorkbook wbook = new HSSFWorkbook();
+        HSSFCellStyle cellStyle = wbook.createCellStyle();
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        HSSFSheet sheet = wbook.createSheet("Sheet1");
+        HSSFRow row = sheet.createRow(0);
+        for (int i=0;i<tableHeaders.length;i++) {
+            HSSFCell cell = row.createCell(i);
+            cell.setCellValue(tableHeaders[i]);
+            cell.setCellStyle(cellStyle);
+        }
+        wbook.setActiveSheet(0);
+        String format = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        OutputStream out = new FileOutputStream(new File("E:\\FTPData\\hkadmin\\hk\\门店日清单据-"+format+".xls"));
+        wbook.write(out);
+        out.close();*/
+
 
     }
 

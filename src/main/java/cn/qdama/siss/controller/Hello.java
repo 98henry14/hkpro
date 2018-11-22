@@ -4,24 +4,23 @@ import cn.qdama.siss.bean.Detail4im;
 import cn.qdama.siss.bean.Master4im;
 import cn.qdama.siss.bean.SysSheetNo;
 import cn.qdama.siss.bean.SysSheetNoKey;
+import cn.qdama.siss.mapper.Branch_stockMapper;
 import cn.qdama.siss.mapper.Detail4imMapper;
 import cn.qdama.siss.mapper.Master4imMapper;
 import cn.qdama.siss.mapper.SysSheetNoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
-@RestController
+@Controller
 public class Hello {
     @Autowired
     private JdbcTemplate template;
@@ -31,6 +30,8 @@ public class Hello {
     private SysSheetNoMapper sysSheetNoMapper;
     @Autowired
     private Master4imMapper master4imMapper;
+    @Autowired
+    private Branch_stockMapper stockMapper;
 
     /*@RequestMapping("/hello")
     public List<Map<String,Object>> getFirst(){
@@ -39,10 +40,10 @@ public class Hello {
 
     }*/
     @RequestMapping("/index")
-    public BigDecimal getIndex(){
+    public String getIndex() {
         BigDecimal sub_amt = detail4imMapper.getSub_amt("DC00001811140061");
         long l = sub_amt.longValue();
-        return sub_amt;
+        return "templates/production/index";
         //1.先获取目前的值再更新
         /*SysSheetNoKey key = new SysSheetNoKey();
         key.setBranchNo("0000");
@@ -55,7 +56,8 @@ public class Hello {
     }
 
 
-    @RequestMapping("/hello")
+    @RequestMapping("/mddc")
+    @ResponseBody
     public List<Detail4im> get() {
         //1.先获取目前的值再更新
         SysSheetNoKey key = new SysSheetNoKey();
@@ -63,11 +65,11 @@ public class Hello {
         key.setSheetId("DC");
         SysSheetNo sysSheetNo = sysSheetNoMapper.selectByPrimaryKey(key);
 
-        sysSheetNo.setSheetValue(sysSheetNo.getSheetValue()+1);
+        sysSheetNo.setSheetValue(sysSheetNo.getSheetValue() + 1);
         sysSheetNo.setLastTime(new Date());
         sysSheetNoMapper.updateByPrimaryKey(sysSheetNo);
 
-
+/*
         String sql = "SELECT  " +
                 "        [flow_id]=null ,  " +
                 "        [order_qty]=null,  " +
@@ -112,8 +114,8 @@ public class Hello {
                 "        from [t_sys_sheetno_flow]   " +
                 "        WHERE ([sheet_id] = 'DC') AND ('DC' IS NOT NULL) AND ([branch_no] = '0000')   " +
                 "        AND ('0000' IS NOT NULL))  " +
-                "                    FROM t_im_branch_stock s with(nolock)" +
-                "                    LEFT JOIN  " +
+                "FROM t_im_branch_stock s with(nolock)" +
+                "LEFT JOIN  " +
                 "      (  " +
                 "       SELECT t.branch_no, t.item_no, convert(numeric(16,4),sum(jcqty)) as jcstock_qty FROM  " +
                 "       (  " +
@@ -139,19 +141,29 @@ public class Hello {
                 "                    INNER JOIN t_bd_item_info i ON s.item_no = i.item_no  " +
                 "     INNER JOIN t_bd_branch_info info ON info.branch_no=left(s.branch_no,4)   " +
                 "     left join t_pc_branch_price bp on bp.branch_no=left(s.branch_no,4) and bp.item_no =s.item_no  " +
-                "                    LEFT JOIN t_bd_item_cls c ON  c.item_clsno = i.item_clsno   " +
-                "                    LEFT JOIN t_bd_item_brand b ON b.item_brand = i.item_brand  " +
-                "                    LEFT JOIN t_bd_supcust_info sup ON sup.supcust_no = i.main_supcust AND sup.supcust_flag = 'S'  " +
-                "                     WHERE i.item_stock = '1'  AND s.branch_no LIKE '100101%' AND s.stock_qty > 0 " +//--查询条件在此
-                "                     AND s.item_no not in ('40232','41059')  " +
-                "                     AND (s.stock_qty <> 0 or jc.jcstock_qty <> 0)    " +
-                "                     AND i.sale_flag <> '2'   and info.branch_header='0000' and info.trade_type!='1'" +
-                "                     AND (left(c.item_clsno,2) IN('01','02','03','04','05','07','LB')   " +
-                "                     OR left(c.item_clsno,1) IN('01','02','03','04','05','07','LB'))   " +
-                "                     order by s.item_no ";
+                "     LEFT JOIN t_bd_item_cls c ON  c.item_clsno = i.item_clsno   " +
+                "     LEFT JOIN t_bd_item_brand b ON b.item_brand = i.item_brand  " +
+                "     LEFT JOIN t_bd_supcust_info sup ON sup.supcust_no = i.main_supcust AND sup.supcust_flag = 'S'  " +
+                "      WHERE i.item_stock = '1'  AND s.branch_no LIKE '100101%' AND s.stock_qty > 0 " +//--查询条件在此
+                "      AND s.item_no not in ('40232','41059','40045')  " +
+                "      AND (s.stock_qty <> 0 or jc.jcstock_qty <> 0)    " +
+                "      AND i.sale_flag <> '2'   and info.branch_header='0000' and info.trade_type!='1'" +
+                "      AND (left(c.item_clsno,2) IN('01','02','03','04','05','07','LB')   " +
+                "      OR left(c.item_clsno,1) IN('01','02','03','04','05','07','LB'))   " +
+                "      order by s.item_no ";
 //        List<Detail4im> list1 = template.queryForList(sql, Detail4im.class);
-        List<Detail4im> list1 =  template.query(sql,new BeanPropertyRowMapper<Detail4im>(Detail4im.class));
+        List<Detail4im> list1 = template.query(sql, new BeanPropertyRowMapper<Detail4im>(Detail4im.class));*/
+        //获得门店日清数据
+        List<Detail4im> list1 = stockMapper.getMDDayClean("100101%");
         for (Detail4im detail4im : list1) {
+            //判断全壳的数量，需要加半壳的数量，再减去猪肉类未做BOM的散件
+            if (detail4im.getItemNo().equals("40044")) {
+                BigDecimal v = new BigDecimal(stockMapper.selectMeatMinusStock()).setScale(4, RoundingMode.HALF_UP);
+                System.out.println(v.toString() + "===" + detail4im.getValidPrice().multiply(v));
+                detail4im.setLargeQty(v);
+                detail4im.setRealQty(v);
+                detail4im.setSubAmt(detail4im.getValidPrice().multiply(v));
+            }
             detail4imMapper.insertAuto(detail4im);
         }
         //第三步
@@ -164,7 +176,7 @@ public class Hello {
         master4im.setCoinNo("RMB");
         master4im.setComFlag("0");
         master4im.setOrderMan("9999");
-        master4im.setReasonNo("");
+        master4im.setReasonNo("09");
         master4im.setAuditStatus("0");
         master4im.setCheckFlag("2");
         master4im.setOrderStatus("0");

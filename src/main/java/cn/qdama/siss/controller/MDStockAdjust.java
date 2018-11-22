@@ -1,6 +1,9 @@
 package cn.qdama.siss.controller;
 
-import cn.qdama.siss.bean.*;
+import cn.qdama.siss.bean.Detail4im;
+import cn.qdama.siss.bean.Master4im;
+import cn.qdama.siss.bean.SysSheetNo;
+import cn.qdama.siss.bean.SysSheetNoKey;
 import cn.qdama.siss.mapper.Branch_stockMapper;
 import cn.qdama.siss.mapper.Detail4imMapper;
 import cn.qdama.siss.mapper.Master4imMapper;
@@ -10,12 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.soap.Detail;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
