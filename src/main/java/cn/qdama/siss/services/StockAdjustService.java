@@ -83,8 +83,8 @@ public class StockAdjustService {
             BigDecimal sub_amt = detail4imMapper.getSub_amt(ims.get(0).getSheetNo());
             masterService.insertMasterData("000001",ims.get(0).getSheetNo(),"+","OO",sub_amt);
             //审核单据
-            int i = masterService.confirmSheet(list.get(0).getSheetNo());
-            System.out.println("标识:"+i+"    =>总部库存调整单据:"+list.get(0).getSheetNo());
+            int i = masterService.confirmSheet(ims.get(0).getSheetNo());
+            System.out.println("标识:"+i+"    =>总部库存调整单据:"+ims.get(0).getSheetNo());
         }
     }
 

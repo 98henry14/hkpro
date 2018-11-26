@@ -1,14 +1,17 @@
 package cn.qdama.siss;
 
-import cn.qdama.siss.mapper.Branch_stockMapper;
-import cn.qdama.siss.mapper.Detail4imMapper;
-import cn.qdama.siss.mapper.SysSheetNoMapper;
+import cn.qdama.siss.bean.Detail4im;
+import cn.qdama.siss.mapper.*;
 import cn.qdama.siss.services.InsertMasterService;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.format.number.PercentStyleFormatter;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -18,8 +21,14 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.sql.DataSource;
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -37,9 +46,28 @@ public class SissApplicationTests {
     JavaMailSenderImpl javaMailSender;
     @Autowired
     InsertMasterService masterService;
+    @Autowired
+    RMDaySumMapper daySumMapper;
+    @Autowired
+    JXCDaySumMapper jxcDaySumMapper;
 
     @Test
     public void contextLoads() throws Exception {
+
+        /*String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        Double totalSaleAmt = daySumMapper.getTotalSaleAmt(date);
+        System.out.println(totalSaleAmt);
+        BigDecimal sub_amt = detail4imMapper.getSub_amt("DC00001811230091");
+        double dc = sub_amt.doubleValue();
+        System.out.println(dc);
+
+        Double acceptanceAmount = jxcDaySumMapper.getAcceptanceAmount(date, "1001");
+        String format = NumberFormat.getPercentInstance(Locale.CHINA).format(dc / acceptanceAmount);
+        DecimalFormat format1 = new DecimalFormat("##.00%");
+
+        System.out.println("入库金额："+acceptanceAmount+";      销售金额:"+totalSaleAmt+"     比例为："+format+"    带小数点："+format1.format(dc/acceptanceAmount));*/
+
+
         /*long oo = masterService.getSysSheetValue("OO", "0000");
         System.out.println(oo);*/
 

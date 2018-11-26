@@ -4,10 +4,7 @@ import cn.qdama.siss.bean.Detail4im;
 import cn.qdama.siss.bean.Master4im;
 import cn.qdama.siss.bean.SysSheetNo;
 import cn.qdama.siss.bean.SysSheetNoKey;
-import cn.qdama.siss.mapper.Branch_stockMapper;
-import cn.qdama.siss.mapper.Detail4imMapper;
-import cn.qdama.siss.mapper.Master4imMapper;
-import cn.qdama.siss.mapper.SysSheetNoMapper;
+import cn.qdama.siss.mapper.*;
 import com.sun.javafx.binding.BindingHelperObserver;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -30,6 +27,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +47,8 @@ public class DCService {
     private JavaMailSenderImpl javaMailSender;
     @Autowired
     private InsertMasterService insertMasterService;
+    @Autowired
+    private JXCDaySumMapper jxcDaySumMapper;
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -72,11 +72,7 @@ public class DCService {
                 cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
                 HSSFSheet sheet = wbook.createSheet("-门店日清单据-");
                 HSSFRow row = sheet.createRow(0);
-                for (int i=0;i<tableHeaders.length;i++) {
-                    HSSFCell cell = row.createCell(i);
-                    cell.setCellValue(tableHeaders[i]);
-                    cell.setCellStyle(cellStyle);
-                }
+
         //2.2 获取单据
         List<Detail4im> list1 = stockMapper.getMDDayClean("100101%");
         int i=1;
@@ -104,12 +100,19 @@ public class DCService {
             detail4imMapper.insertAuto(detail4im);
             i++;
         }
+                //格式化单元格
+                for (int j=0;j<tableHeaders.length;j++) {
+                    HSSFCell cell = row.createCell(j);
+                    cell.setCellValue(tableHeaders[j]);
+                    cell.setCellStyle(cellStyle);
+                    sheet.autoSizeColumn(j);
+                }
         //第3步
-        //计算单据总额
+        //计算单据总额,及日清比例
         BigDecimal sub_amt = detail4imMapper.getSub_amt(list1.get(0).getSheetNo());
             HSSFRow totalRow = sheet.createRow(list1.size() + 1);
-            totalRow.createCell(0).setCellValue("合计");
-            totalRow.createCell(6).setCellValue(sub_amt.toString());
+        totalRow.createCell(0).setCellValue("合计");
+        totalRow.createCell(6).setCellValue(sub_amt.toString());
         String format = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String filepath ="E:\\FTPData\\hkadmin\\hk\\门店日清单据-"+format+".xls";
         String filepath1="E:\\FTPData\\hkadmin\\hk\\门店日清单据.xls";
@@ -119,16 +122,22 @@ public class DCService {
         wbook.write(out1);
         out.close();
         out1.close();
+        //日清比例，先查出入库金额
+        Double acceptanceAmount = jxcDaySumMapper.getAcceptanceAmount(format, "1001");
+        DecimalFormat percentFormat =new DecimalFormat("##.00%");
+        String DCPercent = percentFormat.format(sub_amt.doubleValue() / acceptanceAmount);
         //数据插入到主表中
         insertMasterService.insertMasterData("100101",
                 list1.get(0).getSheetNo(), "-", "DC", sub_amt);
+
         //发送邮件
+
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper( mimeMessage,true,"utf-8");
 
             helper.setSubject("门店"+format+"日清数据");
-            helper.setText("附件为"+format+"日清数据,日清金额为:"+sub_amt+"。详情见附件，邮件为定时发送，如有问题，请及时联系!\n ");
+            helper.setText("附件为"+format+"日清数据,日清金额为:"+sub_amt+",日清比例为:"+DCPercent+"。详情见附件，邮件为定时发送，如有问题，请及时联系!\n ");
             String[] to={"zhoufei@qdama.cn","zhongguoming@qdama.cn"};//,
             //String[] cc={"dengxiobiao@qdama.cn","zhuangzhouhu@qdama.cn","lvjiankang@qdama.cn","yuhanwen@qdama.cn","zhoujiantao@qdama.cn","lijian@qdama.cn","chenfeiyu@qdama.cn"};
             String[] cc={"zhuangzhouhu@qdama.cn","yuhanwen@qdama.cn","zhoujiantao@qdama.cn","qiuziwen@qdama.cn","chenfeiyu@qdama.cn","xiexiaojie@qdama.cn"};
