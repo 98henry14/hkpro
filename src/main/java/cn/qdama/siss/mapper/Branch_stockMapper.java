@@ -136,7 +136,7 @@ public interface Branch_stockMapper {
             "     [num1]=null,   " ,
             "     [num2]=null,   " ,
             "     [num3]=null,   " ,
-            "     [memo]='来自系统的自动插入',   " ,
+            "     [memo]='定时插入程序',   " ,
             "     [item_barcode]=null,   " ,
             "     [produce_date]=null,      " ,
             "                    [item_no] = s.item_no,  " ,

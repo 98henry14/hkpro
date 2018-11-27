@@ -54,8 +54,8 @@ public class StockAdjustService {
         if (list!=null && list.size()>0){
             //如果不为空则利用总部人员制作的直调入库单插入
             for (Detail4im detail4im : list) {
-                detail4im.setFlowId(null);//
                 detail4im.setOrderQty(null);
+                detail4im.setFlowId(null);//
                 detail4im.setNum2(null);
                 detail4im.setMemo("程序插入-总部制单");
                 detail4im.setSheetNo("OO0000"+s+String.format("%04d",value));
@@ -83,8 +83,8 @@ public class StockAdjustService {
             BigDecimal sub_amt = detail4imMapper.getSub_amt(ims.get(0).getSheetNo());
             masterService.insertMasterData("000001",ims.get(0).getSheetNo(),"+","OO",sub_amt);
             //审核单据
-            int i = masterService.confirmSheet(list.get(0).getSheetNo());
-            System.out.println("标识:"+i+"    =>总部库存调整单据:"+list.get(0).getSheetNo());
+            int i = masterService.confirmSheet(ims.get(0).getSheetNo());
+            System.out.println("标识:"+i+"    =>总部库存调整单据:"+ims.get(0).getSheetNo());
         }
     }
 
