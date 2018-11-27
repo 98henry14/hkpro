@@ -123,9 +123,10 @@ public class DCService {
         DecimalFormat percentFormat =new DecimalFormat("##.00%");
         String DCPercent = percentFormat.format(sub_amt.doubleValue() / acceptanceAmount);
         //数据插入到主表中
-        insertMasterService.insertMasterData("100101",
+        int dcnum = insertMasterService.insertMasterData("100101",
                 list1.get(0).getSheetNo(), "-", "DC", sub_amt);
-
+        //控制台输出
+        System.out.println(new Date()+"     =>标识:"+dcnum+"    =>门店日清单据:"+list1.get(0).getSheetNo());
         //发送邮件
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -145,6 +146,7 @@ public class DCService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+
         //审核单据
         return insertMasterService.confirmSheet(list1.get(0).getSheetNo());
 
