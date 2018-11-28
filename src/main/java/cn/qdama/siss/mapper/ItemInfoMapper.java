@@ -230,6 +230,22 @@ public interface ItemInfoMapper {
     })
     int updateByPrimaryKeyWithBLOBs(ItemInfo record);
 
+    /**
+     * "update t_bd_item_info",
+     *             "set pro_code1 = #{proCode1,jdbcType=VARCHAR},",
+     *             "pro_code2 = #{proCode2,jdbcType=VARCHAR},",
+     *             "where item_no = #{itemNo,jdbcType=VARCHAR}"
+     * @param record
+     * @return
+     */
+    @Update({
+            "update t_bd_item_info",
+            "set pro_code1 = #{proCode1,jdbcType=VARCHAR},",
+            "pro_code2 = #{proCode2,jdbcType=VARCHAR}",
+            "where item_no = #{itemNo,jdbcType=VARCHAR}"
+    })
+    int updateProCode(ItemInfo record);
+
     @Update({
         "update t_bd_item_info",
         "set item_subno = #{itemSubno,jdbcType=VARCHAR},",

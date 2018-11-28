@@ -1,6 +1,6 @@
 package cn.qdama.siss;
 
-import cn.qdama.siss.bean.Detail4im;
+import cn.qdama.siss.bean.*;
 import cn.qdama.siss.mapper.*;
 import cn.qdama.siss.services.InsertMasterService;
 import org.apache.poi.hssf.usermodel.*;
@@ -24,11 +24,13 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.Format;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.SimpleFormatter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -50,10 +52,50 @@ public class SissApplicationTests {
     RMDaySumMapper daySumMapper;
     @Autowired
     JXCDaySumMapper jxcDaySumMapper;
+    @Autowired
+    HKShopMapper shopMapper;
+    @Autowired
+    BaseCodeMapper baseCodeMapper;
+    @Autowired
+    ItemInfoMapper itemInfoMapper;
 
 
     @Test
     public void contextLoads() throws Exception {
+        /*List<PredictResults> todayPredict = shopMapper.getTodayPredict("2018-11-28");
+        for (PredictResults predictResults : todayPredict) {
+            System.out.println(predictResults.toString());
+        }*/
+        baseCodeMapper.deleteS1Others(new BaseCodeKey("S1","OT"));
+        baseCodeMapper.deleteS1Others(new BaseCodeKey("S2","OT"));
+        /*String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        BaseCode s2= new BaseCode();
+        s2.setCodeName(date);
+        s2.setTypeNo("S2");
+        s2.setCodeId("date");
+        baseCodeMapper.insert(s2);
+
+        List<Integer> list = shopMapper.getS1Value(date);
+        BaseCode S1 = new BaseCode();
+        S1.setTypeNo("S1");
+        for (Integer integer : list) {
+            S1.setCodeId(integer.toString());
+            S1.setCodeName(integer.toString());
+            baseCodeMapper.insert(S1);
+        }*/
+
+        List<ItemInfo> predict = shopMapper.getPredict("2018-11-28");
+        for (ItemInfo itemInfo : predict) {
+            itemInfo.setProCode1(null);
+            itemInfo.setProCode2(null);
+            itemInfoMapper.updateProCode(itemInfo);
+            System.out.println(itemInfo.toString());
+        }
+
+        System.out.println(predict.size());
+
+
+
         /*String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         Double totalSaleAmt = daySumMapper.getTotalSaleAmt(date);
         System.out.println(totalSaleAmt);
