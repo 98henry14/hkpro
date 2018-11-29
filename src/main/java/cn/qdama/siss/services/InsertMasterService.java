@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
@@ -18,7 +19,7 @@ public class InsertMasterService {
     Master4imMapper master4imMapper;
     @Autowired
     private SysSheetNoMapper sysSheetNoMapper;
-
+    //用于t_im_sheet_master插入主表
     public int insertMasterData(String branchno, String sheetno, String dbno, String transno, BigDecimal sub_amt) {
         Master4im master4im = new Master4im();
         master4im.setBranchNo(branchno);//设置调整仓库
@@ -42,7 +43,7 @@ public class InsertMasterService {
         int i = master4imMapper.insert(master4im);
         return i;
     }
-
+    //用于审核单据
     public int confirmSheet(String sheetno){
 
         Master4im master4im = master4imMapper.selectByPrimaryKey(sheetno);
@@ -52,7 +53,7 @@ public class InsertMasterService {
         int i = master4imMapper.updateByPrimaryKey(master4im);//更新数据
         return i;
     }
-
+    //用于更新单据的单号并获取下个值
     public long getSysSheetValue(String type ,String branchno){
         SysSheetNoKey key = new SysSheetNoKey();
         key.setSheetId(type);
@@ -62,5 +63,25 @@ public class InsertMasterService {
         sysSheetNo.setLastTime(new Date());
         sysSheetNoMapper.updateByPrimaryKey(sysSheetNo);
         return sysSheetNo.getSheetValue();
+    }
+
+    /**
+     * 對getSysSheetValue的强化，直接返回更新后的單據號
+     * @param type
+     * @param branchno
+     * @return Sheetno
+     */
+    public String getSheetNo(String type ,String branchno){
+        SysSheetNoKey key = new SysSheetNoKey();
+        key.setSheetId(type);
+        key.setBranchNo(branchno);
+        SysSheetNo sysSheetNo = sysSheetNoMapper.selectByPrimaryKey(key);
+        sysSheetNo.setLastTime(new Date());
+        sysSheetNo.setSheetValue(sysSheetNo.getSheetValue() + 1);
+        sysSheetNoMapper.updateByPrimaryKey(sysSheetNo);
+        String date = new SimpleDateFormat("yyMMdd").format(new Date());
+        //type+operid+date+sysSheetNo.getSheetValue();DY10011811290001
+        String sheetNo=type+branchno+date+String.format("%04d",sysSheetNo.getSheetValue());
+        return sheetNo;
     }
 }

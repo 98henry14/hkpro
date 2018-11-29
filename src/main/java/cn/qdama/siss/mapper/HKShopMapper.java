@@ -1,6 +1,7 @@
 package cn.qdama.siss.mapper;
 
 import cn.qdama.siss.bean.ItemInfo;
+import cn.qdama.siss.bean.PMDetail;
 import cn.qdama.siss.bean.PredictResults;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -24,7 +25,43 @@ public interface HKShopMapper {
             "where order_date=#{order_date}"})
     List<Integer> getS1Value(String order_date);
 
-    @Select({"select TOP 10 " ,
+    /**
+     * 将预测值设置到系统中，烧腊不应该推
+     * @param branch_no
+     * @return
+     */
+    @Select({"SELECT " ,
+            "flow_id =null," ,
+            "sheet_no =null," ,
+            "b.item_no," ,
+            "ROW_NUMBER() over (order by b.item_no) as row_id," ,
+            "order_qty=0.0000," ,
+            "CAST(a.sell_SKU_predict as NUMERIC(10,4)) as real_qty," ,
+            "CAST(a.sell_SKU_predict/c.purchase_spec as NUMERIC (10,4)) as large_qty," ,
+            "send_qty=0.0000," ,
+            "orgi_price=0.0000," ,
+            "b.price as valid_price," ,
+            "a.sell_SKU_predict * b.price as sub_amt," ,
+            "tax=0.0000," ,
+            "b.sale_price," ,
+            "come_num =0.0000," ,
+            "memo='建议值下发'," ,
+            "product_date=null," ,
+            "item_barcode=null," ,
+            "valid_date=null," ,
+            "licence =null," ,
+            "domestic_qty =null," ,
+            "domestic_price =null," ,
+            "domestic_amt=null" ,
+            "FROM HK_shop.dbo.results_predict a" ,
+            " left JOIN [dbo].[t_pc_branch_price] b on b.item_no = RIGHT(a.order_SKU_number,5) " ,
+            "LEFT JOIN dbo.t_bd_item_info c on c.item_no=RIGHT(a.order_SKU_number,5) " ,
+            "where a.order_date=CONVERT(VARCHAR(10),GETDATE(),23) and c.item_clsno not like '0101%' and b.branch_no=#{branch_no,jdbcType=VARCHAR}" ,
+            "order by b.item_no"})
+    List<PMDetail> getPredictDeatil(String branch_no);
+
+    //以下方法不能直接更新，会有异常产生
+   /* @Select({"select TOP 10 " ,
             "b.item_no ," ,
             "b.item_subno ," ,
             "b.item_name ," ,
@@ -117,6 +154,6 @@ public interface HKShopMapper {
             "from HK_shop.dbo.results_predict a" ,
             "LEFT JOIN t_bd_item_info b on RIGHT(a.order_SKU_number,5)=b.item_no" ,
             "where b.item_clsno not like '0101%' and a.order_date=#{order_date}  "})
-    List<ItemInfo> getPredict(String order_date);
+    List<ItemInfo> getPredict(String order_date);*/
 
 }

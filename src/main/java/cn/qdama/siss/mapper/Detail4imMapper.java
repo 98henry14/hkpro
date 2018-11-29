@@ -129,6 +129,11 @@ public interface Detail4imMapper {
     })
     int updateByPrimaryKey(Detail4im record);
 
+    /**
+     * 获取单据金额
+     * @param sheetNo
+     * @return
+     */
     @Select({"select sum(sub_amt) from t_im_sheet_detail " +
             "where sheet_no = #{sheetNo,jdbcType=CHAR}"})
     BigDecimal getSub_amt(String sheetNo);

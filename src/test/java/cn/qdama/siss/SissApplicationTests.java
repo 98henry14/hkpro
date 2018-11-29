@@ -2,6 +2,7 @@ package cn.qdama.siss;
 
 import cn.qdama.siss.bean.*;
 import cn.qdama.siss.mapper.*;
+import cn.qdama.siss.services.DYPredirectPushService;
 import cn.qdama.siss.services.InsertMasterService;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -58,17 +59,29 @@ public class SissApplicationTests {
     BaseCodeMapper baseCodeMapper;
     @Autowired
     ItemInfoMapper itemInfoMapper;
+    @Autowired
+    private DYPredirectPushService service;
+
 
 
     @Test
     public void contextLoads() throws Exception {
+        service.pushDY();
+
         /*List<PredictResults> todayPredict = shopMapper.getTodayPredict("2018-11-28");
         for (PredictResults predictResults : todayPredict) {
             System.out.println(predictResults.toString());
         }*/
-        baseCodeMapper.deleteS1Others(new BaseCodeKey("S1","OT"));
+        /*List<PMDetail> predictDeatil = shopMapper.getPredictDeatil("1001");
+        for (PMDetail pmDetail : predictDeatil) {
+            System.out.println(pmDetail);
+        }
+        String dy = masterService.getSheetNo("DC", "0000");
+        System.out.println(dy);*/
+        //以下方式经测试，存在问题，更新的商品前台会出异常，并且价格会被更新
+        /*baseCodeMapper.deleteS1Others(new BaseCodeKey("S1","OT"));
         baseCodeMapper.deleteS1Others(new BaseCodeKey("S2","OT"));
-        /*String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         BaseCode s2= new BaseCode();
         s2.setCodeName(date);
         s2.setTypeNo("S2");
@@ -82,7 +95,7 @@ public class SissApplicationTests {
             S1.setCodeId(integer.toString());
             S1.setCodeName(integer.toString());
             baseCodeMapper.insert(S1);
-        }*/
+        }
 
         List<ItemInfo> predict = shopMapper.getPredict("2018-11-28");
         for (ItemInfo itemInfo : predict) {
@@ -93,7 +106,7 @@ public class SissApplicationTests {
         }
 
         System.out.println(predict.size());
-
+*/
 
 
         /*String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
