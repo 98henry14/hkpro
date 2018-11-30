@@ -111,12 +111,12 @@ public class DCService {
         totalRow.createCell(6).setCellValue(sub_amt.toString());
         String format = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String filepath ="E:\\FTPData\\hkadmin\\hk\\门店日清单据-"+format+".xls";
-        String filepath1="E:\\FTPData\\hkadmin\\hk\\门店日清单据.xls";
         OutputStream out = new FileOutputStream(new File(filepath));
-        OutputStream out1 = new FileOutputStream(new File(filepath1));
         wbook.write(out);
-        wbook.write(out1);
         out.close();
+        String filepath1="E:\\FTPData\\hkadmin\\hk\\门店日清单据.xls";
+        OutputStream out1 = new FileOutputStream(new File(filepath1));
+        wbook.write(out1);
         out1.close();
         //日清比例，先查出入库金额
         Double acceptanceAmount = jxcDaySumMapper.getAcceptanceAmount(format, "1001");
@@ -127,6 +127,7 @@ public class DCService {
                 list1.get(0).getSheetNo(), "-", "DC", sub_amt);
         //控制台输出
         System.out.println(new Date()+"     =>标识:"+dcnum+"    =>门店日清单据:"+list1.get(0).getSheetNo());
+        logger.info(new Date()+"     =>标识:"+dcnum+"    =>门店日清单据:"+list1.get(0).getSheetNo());
         //发送邮件
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

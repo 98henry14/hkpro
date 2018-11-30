@@ -1,13 +1,7 @@
 package cn.qdama.siss.controller;
 
-import cn.qdama.siss.bean.Detail4im;
-import cn.qdama.siss.bean.Master4im;
-import cn.qdama.siss.bean.SysSheetNo;
-import cn.qdama.siss.bean.SysSheetNoKey;
-import cn.qdama.siss.mapper.Branch_stockMapper;
-import cn.qdama.siss.mapper.Detail4imMapper;
-import cn.qdama.siss.mapper.Master4imMapper;
-import cn.qdama.siss.mapper.SysSheetNoMapper;
+import cn.qdama.siss.bean.*;
+import cn.qdama.siss.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -31,6 +25,8 @@ public class Hello {
     private Master4imMapper master4imMapper;
     @Autowired
     private Branch_stockMapper stockMapper;
+    @Autowired
+    private HKShopMapper shopMapper;
 
     /*@RequestMapping("/hello")
     public List<Map<String,Object>> getFirst(){
@@ -57,6 +53,15 @@ public class Hello {
         return sysSheetNo.getSheetValue();*/
     }
 
+    @RequestMapping("/test")
+    @ResponseBody
+    public List<PMDetail>  TestOne() {
+        /*BigDecimal sub_amt = detail4imMapper.getSub_amt("DC00001811140061");
+        long l = sub_amt.longValue();
+        String s = sub_amt.toString();*/
+        List<PMDetail> predictDeatil = shopMapper.getPredictDeatil("1001");
+        return predictDeatil;
+    }
 
     @RequestMapping("/mddc")
     @ResponseBody

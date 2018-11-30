@@ -28,10 +28,12 @@ import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.SimpleFormatter;
+import java.util.spi.CalendarDataProvider;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -66,17 +68,9 @@ public class SissApplicationTests {
 
     @Test
     public void contextLoads() throws Exception {
-        service.pushDY();
+        //service.pushDY();
 
-        /*List<PredictResults> todayPredict = shopMapper.getTodayPredict("2018-11-28");
-        for (PredictResults predictResults : todayPredict) {
-            System.out.println(predictResults.toString());
-        }*/
-        /*List<PMDetail> predictDeatil = shopMapper.getPredictDeatil("1001");
-        for (PMDetail pmDetail : predictDeatil) {
-            System.out.println(pmDetail);
-        }
-        String dy = masterService.getSheetNo("DC", "0000");
+        /*String dy = masterService.getSheetNo("DC", "0000");
         System.out.println(dy);*/
         //以下方式经测试，存在问题，更新的商品前台会出异常，并且价格会被更新
         /*baseCodeMapper.deleteS1Others(new BaseCodeKey("S1","OT"));
