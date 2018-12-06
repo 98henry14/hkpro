@@ -37,20 +37,11 @@ public class Hello {
     @RequestMapping("/index")
 //    @ResponseBody
     public String getIndex() {
-        BigDecimal sub_amt = detail4imMapper.getSub_amt("DC00001811140061");
+/*        BigDecimal sub_amt = detail4imMapper.getSub_amt("DC00001811140061");
         long l = sub_amt.longValue();
-        String s = sub_amt.toString();
+        String s = sub_amt.toString();*/
         return "index";
-//        return s;
-        //1.先获取目前的值再更新
-        /*SysSheetNoKey key = new SysSheetNoKey();
-        key.setBranchNo("0000");
-        key.setSheetId("DC");
-        SysSheetNo sysSheetNo = sysSheetNoMapper.selectByPrimaryKey(key);
-        sysSheetNo.setSheetValue(sysSheetNo.getSheetValue()+1);
-        sysSheetNo.setLastTime(new Date());
-        sysSheetNoMapper.updateByPrimaryKey(sysSheetNo);
-        return sysSheetNo.getSheetValue();*/
+
     }
 
     @RequestMapping("/test")

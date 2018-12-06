@@ -54,30 +54,30 @@ public class DCService {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron = "0 00 23 * * ?")
-    public int getDC() throws IOException{
-        //1.先获取目前的值再更新
-        long value = insertMasterService.getSysSheetValue("DC", "0000");
-        //2、获得门店日清数据
-                //2.1 生成excel文件
-                String[] tableHeaders = {"序号", "货号","品名", "单据号", "日清箱数", "日清数量", "单价", "日清金额", "售价", "备注"};
-                HSSFWorkbook wbook = new HSSFWorkbook();
-                HSSFCellStyle cellStyle = wbook.createCellStyle();
-                cellStyle.setAlignment(HorizontalAlignment.CENTER);
-                cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-                HSSFSheet sheet = wbook.createSheet("-门店日清单据-");
-                HSSFRow row = sheet.createRow(0);
+        @Scheduled(cron = "0 00 23 * * ?")
+        public int getDC() throws IOException{
+            //1.先获取目前的值再更新
+            long value = insertMasterService.getSysSheetValue("DC", "0000");
+            //2、获得门店日清数据
+                    //2.1 生成excel文件
+                    String[] tableHeaders = {"序号", "货号","品名", "单据号", "日清箱数", "日清数量", "单价", "日清金额", "售价", "备注"};
+                    HSSFWorkbook wbook = new HSSFWorkbook();
+                    HSSFCellStyle cellStyle = wbook.createCellStyle();
+                    cellStyle.setAlignment(HorizontalAlignment.CENTER);
+                    cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+                    HSSFSheet sheet = wbook.createSheet("-门店日清单据-");
+                    HSSFRow row = sheet.createRow(0);
 
-        //2.2 获取单据
-        List<Detail4im> list1 = stockMapper.getMDDayClean("100101%");
-        int i=1;
-        for (Detail4im detail4im : list1) {
-            //判断全壳的数量，需要加半壳的数量，再减去猪肉类未做BOM的散件
-            if (detail4im.getItemNo().equals("40044")) {
-                BigDecimal v = new BigDecimal(stockMapper.selectMeatMinusStock()).setScale(4, RoundingMode.HALF_UP);
-                // System.out.println(v.toString() + "===" + detail4im.getValidPrice().multiply(v));
-                detail4im.setLargeQty(v);
-                detail4im.setRealQty(v);
+            //2.2 获取单据
+            List<Detail4im> list1 = stockMapper.getMDDayClean("100101%");
+            int i=1;
+            for (Detail4im detail4im : list1) {
+                //判断全壳的数量，需要加半壳的数量，再减去猪肉类未做BOM的散件
+                if (detail4im.getItemNo().equals("40044")) {
+                    BigDecimal v = new BigDecimal(stockMapper.selectMeatMinusStock()).setScale(4, RoundingMode.HALF_UP);
+                    // System.out.println(v.toString() + "===" + detail4im.getValidPrice().multiply(v));
+                    detail4im.setLargeQty(v);
+                    detail4im.setRealQty(v);
                 detail4im.setSubAmt(detail4im.getValidPrice().multiply(v));
             }
                  //插入excel中
