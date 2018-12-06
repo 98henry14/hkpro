@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 /*@MapperScan("cn.qdama.siss.mapper")*/
-@EnableScheduling
+//@EnableScheduling
 public class SissApplication {
 
 	public static void main(String[] args) {

@@ -14,6 +14,7 @@ public class MybatisConfig {
             @Override
             public void customize(org.apache.ibatis.session.Configuration configuration) {
                 configuration.setMapUnderscoreToCamelCase(true);
+
             }
         };
     }

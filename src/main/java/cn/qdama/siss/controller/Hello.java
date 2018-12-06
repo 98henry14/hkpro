@@ -2,9 +2,13 @@ package cn.qdama.siss.controller;
 
 import cn.qdama.siss.bean.*;
 import cn.qdama.siss.mapper.*;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,6 +31,8 @@ public class Hello {
     private Branch_stockMapper stockMapper;
     @Autowired
     private HKShopMapper shopMapper;
+    @Autowired
+    private  PMDetailMapper pmDetailMapper;
 
     /*@RequestMapping("/hello")
     public List<Map<String,Object>> getFirst(){
@@ -41,6 +47,26 @@ public class Hello {
         long l = sub_amt.longValue();
         String s = sub_amt.toString();*/
         return "index";
+
+    }
+
+    @GetMapping("/predict")
+    public String getPredict(Model model) {
+        PageHelper.startPage(5,20);
+//        List<PMDetail> predictDeatil = shopMapper.getPredictDeatil("1001");
+        List<PMDetail> pmDetails = pmDetailMapper.selectAll();
+        PageInfo pageInfo = new PageInfo(pmDetails,10);
+        int[] nums = pageInfo.getNavigatepageNums();
+        for (int num : nums) {
+            System.out.println(num);
+        }
+
+        System.out.println(pageInfo.getTotal()+"===="+pageInfo.getPages());
+
+        model.addAttribute("predicts",pmDetails);
+        model.addAttribute("pageInfo",pageInfo);
+        model.addAttribute("nums",nums);
+        return "predict/list";
 
     }
 
