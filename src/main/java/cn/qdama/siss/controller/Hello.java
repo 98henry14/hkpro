@@ -4,11 +4,13 @@ import cn.qdama.siss.bean.*;
 import cn.qdama.siss.mapper.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -50,17 +52,32 @@ public class Hello {
 
     }
 
-    @GetMapping("/predict")
-    public String getPredict(Model model) {
-        PageHelper.startPage(5,20);
+    @GetMapping("/predict/{num}")
+    public String getPredict(@PathVariable("num") String num, Model model) {
+
+        PageHelper.startPage(Integer.parseInt(num),20);
 //        List<PMDetail> predictDeatil = shopMapper.getPredictDeatil("1001");
         List<PMDetail> pmDetails = pmDetailMapper.selectAll();
         PageInfo pageInfo = new PageInfo(pmDetails,10);
         int[] nums = pageInfo.getNavigatepageNums();
-        for (int num : nums) {
-            System.out.println(num);
+        for (int n : nums) {
+            System.out.println(n);
         }
-
+        System.out.println("当前页面："+pageInfo.getPageNum()+"=========="+pageInfo.getPages());
+        System.out.println("总页数Pages:"+pageInfo.getPages());
+        System.out.println("当前页PageNum"+pageInfo.getPageNum());
+        System.out.println("endRow:"+pageInfo.getEndRow());
+        System.out.println(pageInfo.getNavigateFirstPage()+"=>NavigateFirstPage  显示页码的首页");
+        System.out.println(pageInfo.getNavigateLastPage()+"=>NavigateLastPage     显示页码的最后一夜"  );
+        System.out.println(pageInfo.getNavigatepageNums()+"=>NavigatePageNums       对象？");
+        System.out.println(pageInfo.getNavigatePages()+"=>navigatePages          显示几页页码");
+        System.out.println(pageInfo.getNextPage()+"=>NextPage   下一页");
+        System.out.println(pageInfo.getPageNum()+"=>pageNum     当前页");
+        System.out.println(pageInfo.getPages()+"=>pages         总页数");
+        System.out.println(pageInfo.getPageSize()+"=>pageSize   显示条数");
+        System.out.println(pageInfo.getPrePage()+"=>prePage     上一页");
+        System.out.println(pageInfo.getSize()+"=>size           页数");
+        System.out.println(pageInfo.getStartRow()+"=>StaratRow      ");
         System.out.println(pageInfo.getTotal()+"===="+pageInfo.getPages());
 
         model.addAttribute("predicts",pmDetails);

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -89,14 +90,16 @@
                 </table>
                 <nav aria-label="...">
                     <ul class="pagination justify-content-end" >
-                        <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
+                        <li class="page-item disabled" th:class="${pageInfo.pageNum==1?'page-item disabled':'page-item'}">
+                        <a class="page-link" th:href="@{/predict/}+(${pageInfo.pageNum}-1)" >Previous</a>
                         </li>
-                        <li  class="page-item disabled" th:each="num,iterStat:${nums}">
-                            <span class="page-link" th:text="${num}" ></span>
+                        <li  class="page-item " th:each="num,iterStat:${nums}"
+                            th:class="${pageInfo.pageNum}==${num}?'page-item disabled':'page-item '"
+                        >
+                            <a class="page-link" name="num" th:text="${num}" th:href="@{/predict/}+${num}"></a>
                         </li>
                         <li class="page-item">
-                        <span class="page-link">Next</span>
+                        <a class="page-link">Next</a>
                         </li>
                         <!--
                         <li class="page-item disabled">

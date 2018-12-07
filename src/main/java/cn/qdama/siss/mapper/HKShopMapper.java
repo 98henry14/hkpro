@@ -65,7 +65,7 @@ public interface HKShopMapper {
             "FROM HK_shop.dbo.results_predict a" ,
             " left JOIN [dbo].[t_pc_branch_price] b on b.item_no = RIGHT(a.order_SKU_number,5) " ,
             "LEFT JOIN dbo.t_bd_item_info c on c.item_no=RIGHT(a.order_SKU_number,5) " ,
-            "where a.order_date=CONVERT(VARCHAR(10),GETDATE()-1,23) " ,
+            "where a.order_date=CONVERT(VARCHAR(10),GETDATE(),23) " ,
                     "   and c.main_supcust not in ('HK0024','HK0022') " ,   //排除烧腊两家供应商
                     "   and c.item_clsno not like '0101%' " ,               //排除猪肉类及箱装鸡蛋类
                     "   and c.item_no not in ('40200','40201','40204') " ,
